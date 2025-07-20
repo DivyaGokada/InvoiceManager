@@ -36,14 +36,18 @@ namespace InvoiceApp.Services.Implementations
                         InvoiceId = i.Id,
                         InvoiceDate = i.InvoiceDate,
                         InvoiceNumber = i.InvoiceNumber,
+                        InvoiceType = i.InvoiceType,
                         DueDate = i.DueDate,
                         SupplierName = i.SupplierName,
                         AccountHead = i.AccountHead,
                         Description = i.Description,
                         Amount = i.Amount,
+                        NonGSTAmount = i.NonGSTAmount,
                         GST = i.GST,
                         TotalAmount = i.TotalAmount,
                         PaymentDate = i.PaymentDate,
+                        PaymentType = i.PaymentType,
+                        DirectDebit = i.DirectDebit,
                         Preview = i.Preview
                     }).ToListAsync();
             }
@@ -57,18 +61,22 @@ namespace InvoiceApp.Services.Implementations
                 .Where(i => i.StoreId == storeId)
                 .Select(i => new InvoiceDto
                 {
-                    InvoiceId = i.Id,
-                    InvoiceDate = i.InvoiceDate,
-                    InvoiceNumber = i.InvoiceNumber,
-                    DueDate = i.DueDate,
-                    SupplierName = i.SupplierName,
-                    AccountHead = i.AccountHead,
-                    Description = i.Description,
-                    Amount = i.Amount,
-                    GST = i.GST,
-                    TotalAmount = i.TotalAmount,
-                    PaymentDate = i.PaymentDate,
-                    Preview = i.Preview
+                        InvoiceId = i.Id,
+                        InvoiceDate = i.InvoiceDate,
+                        InvoiceNumber = i.InvoiceNumber,
+                        InvoiceType = i.InvoiceType,
+                        DueDate = i.DueDate,
+                        SupplierName = i.SupplierName,
+                        AccountHead = i.AccountHead,
+                        Description = i.Description,
+                        Amount = i.Amount,
+                        NonGSTAmount = i.NonGSTAmount,
+                        GST = i.GST,
+                        TotalAmount = i.TotalAmount,
+                        PaymentDate = i.PaymentDate,
+                        PaymentType = i.PaymentType,
+                        DirectDebit = i.DirectDebit,
+                        Preview = i.Preview
                 }).ToListAsync();
         }
     }

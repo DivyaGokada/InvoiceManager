@@ -15,8 +15,9 @@ namespace InvoiceApp.Dtos.Invoice
         public DateTime? PaymentDate { get; set; }
         public bool Preview { get; set; }
 
-        public string DebitType { get; set; } = "";       // "Cash" or "Card"
+        public string PaymentType { get; set; } = "";       // "Cash" or "Card"
         public string InvoiceType { get; set; } = "";     // "Original" or "Duplicate"
         public decimal NonGSTAmount { get; set; }
+        public string DirectDebit { get; set; } = "";
     }
 }

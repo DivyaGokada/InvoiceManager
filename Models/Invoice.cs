@@ -15,10 +15,10 @@
         public decimal NonGSTAmount { get; set; }
         public decimal GST { get; set; }
         public decimal TotalAmount { get; set; }
-        public string DebitType { get; set; } = "";
+        public string PaymentType { get; set; } = "";
         public DateTime PaymentDate { get; set; }
         public bool Preview { get; set; }
-
+        public string DirectDebit { get; set; } = "";
         public int StoreId { get; set; }
         public Store Store { get; set; } = null!;
     }
