@@ -12,7 +12,7 @@ namespace InvoiceApp.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Stores",
+                name: "Sites",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -21,7 +21,7 @@ namespace InvoiceApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Stores", x => x.Id);
+                    table.PrimaryKey("PK_Sites", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -47,48 +47,52 @@ namespace InvoiceApp.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     InvoiceNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    InvoiceType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     InvoiceDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     SupplierName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AccountHead = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    NonGSTAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     GST = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    PaymentType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PaymentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Preview = table.Column<bool>(type: "bit", nullable: false),
-                    StoreId = table.Column<int>(type: "int", nullable: false)
+                    DirectDebit = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SiteId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Invoices", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Invoices_Stores_StoreId",
-                        column: x => x.StoreId,
-                        principalTable: "Stores",
+                        name: "FK_Invoices_Sites_SiteId",
+                        column: x => x.SiteId,
+                        principalTable: "Sites",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserStores",
+                name: "UserSites",
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    StoreId = table.Column<int>(type: "int", nullable: false),
-                    RoleInStore = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    SiteId = table.Column<int>(type: "int", nullable: false),
+                    RoleInSite = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserStores", x => new { x.UserId, x.StoreId });
+                    table.PrimaryKey("PK_UserSites", x => new { x.UserId, x.SiteId });
                     table.ForeignKey(
-                        name: "FK_UserStores_Stores_StoreId",
-                        column: x => x.StoreId,
-                        principalTable: "Stores",
+                        name: "FK_UserSites_Sites_SiteId",
+                        column: x => x.SiteId,
+                        principalTable: "Sites",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserStores_Users_UserId",
+                        name: "FK_UserSites_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -96,14 +100,14 @@ namespace InvoiceApp.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Invoices_StoreId",
+                name: "IX_Invoices_SiteId",
                 table: "Invoices",
-                column: "StoreId");
+                column: "SiteId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserStores_StoreId",
-                table: "UserStores",
-                column: "StoreId");
+                name: "IX_UserSites_SiteId",
+                table: "UserSites",
+                column: "SiteId");
         }
 
         /// <inheritdoc />
@@ -113,10 +117,10 @@ namespace InvoiceApp.Migrations
                 name: "Invoices");
 
             migrationBuilder.DropTable(
-                name: "UserStores");
+                name: "UserSites");
 
             migrationBuilder.DropTable(
-                name: "Stores");
+                name: "Sites");
 
             migrationBuilder.DropTable(
                 name: "Users");

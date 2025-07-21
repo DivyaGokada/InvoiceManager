@@ -4,7 +4,7 @@ namespace InvoiceApp.Services.Interfaces
 {
     public interface IInvoiceService
     {
-        Task<List<InvoiceDto>> GetInvoicesByUserIdAsync(int userId, int? storeId = null);
+        Task<List<InvoiceDto>> GetInvoicesBySiteIdAsync(int siteId);
 
     }
 }

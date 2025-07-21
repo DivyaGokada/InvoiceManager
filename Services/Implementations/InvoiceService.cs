@@ -14,69 +14,36 @@ namespace InvoiceApp.Services.Implementations
             _context = context;
         }
 
-        public async Task<List<InvoiceDto>> GetInvoicesByUserIdAsync(int userId, int? storeId = null)
+        public async Task<List<InvoiceDto>> GetInvoicesBySiteIdAsync(int siteId)
         {
-            var userStores = await _context.UserStores
-                .Where(us => us.UserId == userId)
-                .ToListAsync();
+            var sites = _context.Sites;
 
-            var ownedStoreId = userStores
-                .FirstOrDefault(us => us.RoleInStore == "Owner")?.StoreId;
-
-            if (storeId == null)
+            if (!sites.Any(us => us.Id == siteId))
             {
-                storeId = ownedStoreId;
-            }
-
-            if (storeId == 0)
-            {
-                return await _context.Invoices
-                    .Select(i => new InvoiceDto
-                    {
-                        InvoiceId = i.Id,
-                        InvoiceDate = i.InvoiceDate,
-                        InvoiceNumber = i.InvoiceNumber,
-                        InvoiceType = i.InvoiceType,
-                        DueDate = i.DueDate,
-                        SupplierName = i.SupplierName,
-                        AccountHead = i.AccountHead,
-                        Description = i.Description,
-                        Amount = i.Amount,
-                        NonGSTAmount = i.NonGSTAmount,
-                        GST = i.GST,
-                        TotalAmount = i.TotalAmount,
-                        PaymentDate = i.PaymentDate,
-                        PaymentType = i.PaymentType,
-                        DirectDebit = i.DirectDebit,
-                        Preview = i.Preview
-                    }).ToListAsync();
-            }
-
-            if (!userStores.Any(us => us.StoreId == storeId))
-            {
-                throw new UnauthorizedAccessException("Access denied to the specified store.");
+                throw new Exception("Invalid Site Name.");
             }
 
             return await _context.Invoices
-                .Where(i => i.StoreId == storeId)
+                .Where(i => i.SiteId == siteId)
                 .Select(i => new InvoiceDto
                 {
-                        InvoiceId = i.Id,
-                        InvoiceDate = i.InvoiceDate,
-                        InvoiceNumber = i.InvoiceNumber,
-                        InvoiceType = i.InvoiceType,
-                        DueDate = i.DueDate,
-                        SupplierName = i.SupplierName,
-                        AccountHead = i.AccountHead,
-                        Description = i.Description,
-                        Amount = i.Amount,
-                        NonGSTAmount = i.NonGSTAmount,
-                        GST = i.GST,
-                        TotalAmount = i.TotalAmount,
-                        PaymentDate = i.PaymentDate,
-                        PaymentType = i.PaymentType,
-                        DirectDebit = i.DirectDebit,
-                        Preview = i.Preview
+                    InvoiceId = i.InvoiceId,
+                    InvoiceDate = i.InvoiceDate,
+                    InvoiceNumber = i.InvoiceNumber,
+                    InvoiceType = i.InvoiceType,
+                    DueDate = i.DueDate,
+                    SupplierName = i.SupplierName,
+                    AccountHead = i.AccountHead,
+                    Description = i.Description,
+                    Amount = i.Amount,
+                    NonGSTAmount = i.NonGSTAmount,
+                    GST = i.GST,
+                    TotalAmount = i.TotalAmount,
+                    PaymentDate = i.PaymentDate,
+                    PaymentType = i.PaymentType,
+                    DirectDebit = i.DirectDebit,
+                    Preview = i.Preview,
+                    SiteId = i.SiteId,
                 }).ToListAsync();
         }
     }

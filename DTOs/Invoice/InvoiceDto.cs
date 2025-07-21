@@ -19,5 +19,6 @@ namespace InvoiceApp.Dtos.Invoice
         public string InvoiceType { get; set; } = "";     // "Original" or "Duplicate"
         public decimal NonGSTAmount { get; set; }
         public string DirectDebit { get; set; } = "";
+        public int SiteId { get; set; }
     }
 }

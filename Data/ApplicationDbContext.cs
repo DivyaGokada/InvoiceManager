@@ -8,23 +8,23 @@ public class ApplicationDbContext : DbContext
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) {}
 
     public DbSet<User> Users => Set<User>();
-    public DbSet<Store> Stores => Set<Store>();
-    public DbSet<UserStore> UserStores => Set<UserStore>();
+    public DbSet<Site> Sites => Set<Site>();
+    public DbSet<UserSite> UserSites => Set<UserSite>();
     public DbSet<Invoice> Invoices => Set<Invoice>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<UserStore>().HasKey(us => new { us.UserId, us.StoreId });
+        modelBuilder.Entity<UserSite>().HasKey(us => new { us.UserId, us.SiteId });
 
-        modelBuilder.Entity<UserStore>()
+        modelBuilder.Entity<UserSite>()
             .HasOne(us => us.User)
-            .WithMany(u => u.UserStores)
+            .WithMany(u => u.UserSites)
             .HasForeignKey(us => us.UserId);
 
-        modelBuilder.Entity<UserStore>()
-            .HasOne(us => us.Store)
-            .WithMany(s => s.UserStores)
-            .HasForeignKey(us => us.StoreId);
+        modelBuilder.Entity<UserSite>()
+            .HasOne(us => us.Site)
+            .WithMany(s => s.UserSites)
+            .HasForeignKey(us => us.SiteId);
     }
 }
 

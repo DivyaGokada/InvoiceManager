@@ -18,7 +18,8 @@ builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
-    });
+    }
+    );
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -26,7 +27,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReact", policy =>
     {
-        policy.WithOrigins("http://localhost:3000","http://localhost:8000","http://localhost:8080") 
+        policy.WithOrigins("http://localhost:3000", "http://localhost:8000", "http://localhost:8080")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });

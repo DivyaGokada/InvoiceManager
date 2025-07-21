@@ -20,17 +20,18 @@ namespace InvoiceApp.Controllers
             _invoiceService = invoiceService;
         }
 
-        [HttpGet("user/{userId}")]
-        public async Task<IActionResult> GetInvoicesByUser(int userId, [FromQuery] int? storeId)
+        [HttpGet("{siteId}")]
+        public async Task<IActionResult> GetInvoicesBySite(int siteId)
         {
             try
             {
-                var result = await _invoiceService.GetInvoicesByUserIdAsync(userId, storeId);
-                return Ok(result);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(ex.Message); // 403
+                var invoices = await _invoiceService.GetInvoicesBySiteIdAsync(siteId);
+                if (invoices == null || invoices.Count == 0)
+                {
+                    return NotFound(new { message = "No invoices found for the specified store." });
+                }
+
+                return Ok(invoices);
             }
             catch (Exception ex)
             {
@@ -38,21 +39,19 @@ namespace InvoiceApp.Controllers
             }
         }
 
-        [HttpPost("{userId}")]
-        public async Task<IActionResult> AddInvoice(int userId, [FromBody] Invoice invoice)
+        [HttpPost("CreateInvoice")]
+        public async Task<IActionResult> CreateInvoice([FromBody] Invoice invoice)
         {
-            var user = await _context.Users
-                .Include(u => u.UserStores)
-                .FirstOrDefaultAsync(u => u.Id == userId);
-
-            var isOwner = user?.UserStores.Any(us => us.StoreId == invoice.StoreId && us.RoleInStore == "Owner") ?? false;
-
-            if (!isOwner)
-                return Forbid("Only owners can add invoices to their store.");
-
-            _context.Invoices.Add(invoice);
-            await _context.SaveChangesAsync();
-            return Ok(invoice);
+            try
+            {
+                _context.Invoices.Add(invoice);
+                await _context.SaveChangesAsync();
+                return Ok(invoice);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

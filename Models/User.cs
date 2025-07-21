@@ -7,7 +7,7 @@
     public string Username { get; set; } = "";
     public string Password { get; set; } = "";
     public string UserRole { get; set; } = ""; // Owner / Partner
-    public ICollection<UserStore> UserStores { get; set; } = new List<UserStore>();
+    public ICollection<UserSite> UserSites { get; set; } = new List<UserSite>();
 }
 }
 

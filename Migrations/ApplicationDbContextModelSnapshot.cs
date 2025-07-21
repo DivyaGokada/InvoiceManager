@@ -41,6 +41,10 @@ namespace InvoiceApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("DirectDebit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("datetime2");
 
@@ -54,13 +58,24 @@ namespace InvoiceApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("InvoiceType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("NonGSTAmount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("PaymentType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Preview")
                         .HasColumnType("bit");
 
-                    b.Property<int>("StoreId")
+                    b.Property<int>("SiteId")
                         .HasColumnType("int");
 
                     b.Property<string>("SupplierName")
@@ -72,12 +87,12 @@ namespace InvoiceApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StoreId");
+                    b.HasIndex("SiteId");
 
                     b.ToTable("Invoices");
                 });
 
-            modelBuilder.Entity("InvoiceApp.Models.Store", b =>
+            modelBuilder.Entity("InvoiceApp.Models.Site", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -91,7 +106,7 @@ namespace InvoiceApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Stores");
+                    b.ToTable("Sites");
                 });
 
             modelBuilder.Entity("InvoiceApp.Models.User", b =>
@@ -123,65 +138,65 @@ namespace InvoiceApp.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("InvoiceApp.Models.UserStore", b =>
+            modelBuilder.Entity("InvoiceApp.Models.UserSite", b =>
                 {
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("StoreId")
+                    b.Property<int>("SiteId")
                         .HasColumnType("int");
 
-                    b.Property<string>("RoleInStore")
+                    b.Property<string>("RoleInSite")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("UserId", "StoreId");
+                    b.HasKey("UserId", "SiteId");
 
-                    b.HasIndex("StoreId");
+                    b.HasIndex("SiteId");
 
-                    b.ToTable("UserStores");
+                    b.ToTable("UserSites");
                 });
 
             modelBuilder.Entity("InvoiceApp.Models.Invoice", b =>
                 {
-                    b.HasOne("InvoiceApp.Models.Store", "Store")
+                    b.HasOne("InvoiceApp.Models.Site", "Site")
                         .WithMany("Invoices")
-                        .HasForeignKey("StoreId")
+                        .HasForeignKey("SiteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Store");
+                    b.Navigation("Site");
                 });
 
-            modelBuilder.Entity("InvoiceApp.Models.UserStore", b =>
+            modelBuilder.Entity("InvoiceApp.Models.UserSite", b =>
                 {
-                    b.HasOne("InvoiceApp.Models.Store", "Store")
-                        .WithMany("UserStores")
-                        .HasForeignKey("StoreId")
+                    b.HasOne("InvoiceApp.Models.Site", "Site")
+                        .WithMany("UserSites")
+                        .HasForeignKey("SiteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("InvoiceApp.Models.User", "User")
-                        .WithMany("UserStores")
+                        .WithMany("UserSites")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Store");
+                    b.Navigation("Site");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("InvoiceApp.Models.Store", b =>
+            modelBuilder.Entity("InvoiceApp.Models.Site", b =>
                 {
                     b.Navigation("Invoices");
 
-                    b.Navigation("UserStores");
+                    b.Navigation("UserSites");
                 });
 
             modelBuilder.Entity("InvoiceApp.Models.User", b =>
                 {
-                    b.Navigation("UserStores");
+                    b.Navigation("UserSites");
                 });
 #pragma warning restore 612, 618
         }

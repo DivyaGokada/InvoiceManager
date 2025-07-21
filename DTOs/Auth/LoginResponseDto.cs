@@ -7,6 +7,6 @@ namespace InvoiceApp.DTOs.Auth
         public string Name { get; set; } = "";
         public string Username { get; set; } = "";
         public string UserRole { get; set; } = "";
-        public List<StoreInvoicesDto> Stores { get; set; } = new();
+        public List<SiteInvoicesDto> Stores { get; set; } = new();
     }
 }
