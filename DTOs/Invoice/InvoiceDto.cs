@@ -12,7 +12,7 @@ namespace InvoiceApp.Dtos.Invoice
         public decimal Amount { get; set; }
         public decimal GST { get; set; }
         public decimal TotalAmount { get; set; }
-        public DateTime? PaymentDate { get; set; }
+        public DateTime PaymentDate { get; set; }
         public bool Preview { get; set; }
 
         public string PaymentType { get; set; } = "";       // "Cash" or "Card"

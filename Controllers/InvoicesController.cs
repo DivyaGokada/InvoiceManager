@@ -3,6 +3,7 @@ using InvoiceApp.Data;
 using Microsoft.EntityFrameworkCore;
 using InvoiceApp.Models;
 using InvoiceApp.Services.Interfaces;
+using InvoiceApp.Dtos.Invoice;
 
 namespace InvoiceApp.Controllers
 {
@@ -23,35 +24,45 @@ namespace InvoiceApp.Controllers
         [HttpGet("{siteId}")]
         public async Task<IActionResult> GetInvoicesBySite(int siteId)
         {
-            try
-            {
-                var invoices = await _invoiceService.GetInvoicesBySiteIdAsync(siteId);
-                if (invoices == null || invoices.Count == 0)
-                {
-                    return NotFound(new { message = "No invoices found for the specified store." });
-                }
+            var invoices = await _invoiceService.GetBySiteIdAsync(siteId);
+            if (invoices == null || invoices.Count == 0)
+                return NotFound(new { message = $"No invoices found for site ID {siteId}." });
 
-                return Ok(invoices);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return Ok(invoices);
         }
 
-        [HttpPost("CreateInvoice")]
-        public async Task<IActionResult> CreateInvoice([FromBody] Invoice invoice)
+        [HttpPost]
+        public async Task<IActionResult> CreateInvoice([FromBody] InvoiceDto dto)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                _context.Invoices.Add(invoice);
-                await _context.SaveChangesAsync();
-                return Ok(invoice);
+                var fields = ModelState.Where(x => x.Value.Errors.Any())
+                                       .Select(x => x.Key).ToList();
+                return BadRequest(new { message = "Invalid input", missingFields = fields });
             }
-            catch (Exception ex)
+
+            var result = await _invoiceService.CreateAsync(dto);
+            return result.isSuccess ? Ok(result.result) : BadRequest(result.result);
+        }
+        [HttpPut("{invoiceId}")]
+        public async Task<IActionResult> UpdateInvoice(int invoiceId, [FromBody] InvoiceDto dto)
+        {
+            if (!ModelState.IsValid)
             {
-                return BadRequest(ex.Message);
+                var fields = ModelState.Where(x => x.Value.Errors.Any())
+                                       .Select(x => x.Key).ToList();
+                return BadRequest(new { message = "Invalid input", errorFields = fields });
             }
+
+            var result = await _invoiceService.UpdateAsync(invoiceId, dto);
+            return result.isSuccess ? Ok(result.result) : NotFound(new { message = result.result });
+        }
+
+        [HttpDelete("{invoiceId}")]
+        public async Task<IActionResult> DeleteInvoice(int invoiceId)
+        {
+            var result = await _invoiceService.DeleteAsync(invoiceId);
+            return result.isSuccess ? Ok(result.result) : NotFound(new { message = result.result });
         }
     }
 }
