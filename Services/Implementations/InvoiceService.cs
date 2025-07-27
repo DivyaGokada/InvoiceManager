@@ -35,6 +35,7 @@ namespace InvoiceApp.Services.Implementations
                     TotalAmount = i.TotalAmount,
                     PaymentDate = i.PaymentDate,
                     PaymentType = i.PaymentType,
+                    PaymentStatus = i.PaymentStatus,
                     DirectDebit = i.DirectDebit,
                     Preview = i.Preview,
                     SiteId = i.SiteId,
@@ -57,6 +58,7 @@ namespace InvoiceApp.Services.Implementations
                 TotalAmount = dto.TotalAmount,
                 PaymentDate = dto.PaymentDate,
                 PaymentType = dto.PaymentType,
+                PaymentStatus = dto.PaymentStatus,
                 DirectDebit = dto.DirectDebit,
                 Preview = dto.Preview,
                 SiteId = dto.SiteId,
@@ -75,22 +77,22 @@ namespace InvoiceApp.Services.Implementations
             if (invoice == null)
                 return (false, $"Invoice ID {id} not found.");
 
-                invoice.InvoiceDate = dto.InvoiceDate;
-                invoice.InvoiceNumber = dto.InvoiceNumber;
-                invoice.InvoiceType = dto.InvoiceType;
-                invoice.DueDate = dto.DueDate;
-                invoice.SupplierName = dto.SupplierName;
-                invoice.AccountHead = dto.AccountHead;
-                invoice.Description = dto.Description;
-                invoice.Amount = dto.Amount;
-                invoice.NonGSTAmount = dto.NonGSTAmount;
-                invoice.GST = dto.GST;
-                invoice.TotalAmount = dto.TotalAmount;
-                invoice.PaymentDate = dto.PaymentDate;
-                invoice.PaymentType = dto.PaymentType;
-                invoice.DirectDebit = dto.DirectDebit;
-                invoice.Preview = dto.Preview;
-                invoice.SiteId = dto.SiteId;
+            invoice.InvoiceDate = dto.InvoiceDate;
+            invoice.InvoiceNumber = dto.InvoiceNumber;
+            invoice.InvoiceType = dto.InvoiceType;
+            invoice.DueDate = dto.DueDate;
+            invoice.SupplierName = dto.SupplierName;
+            invoice.AccountHead = dto.AccountHead;
+            invoice.Description = dto.Description;
+            invoice.Amount = dto.Amount;
+            invoice.NonGSTAmount = dto.NonGSTAmount;
+            invoice.GST = dto.GST;
+            invoice.TotalAmount = dto.TotalAmount;
+            invoice.PaymentDate = dto.PaymentDate;
+            invoice.PaymentType = dto.PaymentType;
+            invoice.DirectDebit = dto.DirectDebit;
+            invoice.Preview = dto.Preview;
+            invoice.SiteId = dto.SiteId;
 
             await _context.SaveChangesAsync();
             var updatedList = await GetBySiteIdAsync(dto.SiteId);

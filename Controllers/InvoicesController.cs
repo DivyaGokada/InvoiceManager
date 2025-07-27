@@ -32,7 +32,7 @@ namespace InvoiceApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateInvoice([FromBody] InvoiceDto dto)
+        public async Task<IActionResult> Create([FromBody] InvoiceDto dto)
         {
             if (!ModelState.IsValid)
             {
@@ -45,7 +45,7 @@ namespace InvoiceApp.Controllers
             return result.isSuccess ? Ok(result.result) : BadRequest(result.result);
         }
         [HttpPut("{invoiceId}")]
-        public async Task<IActionResult> UpdateInvoice(int invoiceId, [FromBody] InvoiceDto dto)
+        public async Task<IActionResult> Update(int invoiceId, [FromBody] InvoiceDto dto)
         {
             if (!ModelState.IsValid)
             {
@@ -59,7 +59,7 @@ namespace InvoiceApp.Controllers
         }
 
         [HttpDelete("{invoiceId}")]
-        public async Task<IActionResult> DeleteInvoice(int invoiceId)
+        public async Task<IActionResult> Delete(int invoiceId)
         {
             var result = await _invoiceService.DeleteAsync(invoiceId);
             return result.isSuccess ? Ok(result.result) : NotFound(new { message = result.result });
