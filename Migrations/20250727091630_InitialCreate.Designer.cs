@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InvoiceApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250721055836_InitialCreate")]
+    [Migration("20250727091630_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -27,11 +27,11 @@ namespace InvoiceApp.Migrations
 
             modelBuilder.Entity("InvoiceApp.Models.Invoice", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("InvoiceId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InvoiceId"));
 
                     b.Property<string>("AccountHead")
                         .IsRequired()
@@ -45,17 +45,16 @@ namespace InvoiceApp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DirectDebit")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("DueDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("DueDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<decimal>("GST")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime>("InvoiceDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("InvoiceDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("InvoiceNumber")
                         .IsRequired()
@@ -68,11 +67,14 @@ namespace InvoiceApp.Migrations
                     b.Property<decimal>("NonGSTAmount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime>("PaymentDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("PaymentDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("PaymentStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PaymentType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Preview")
@@ -88,7 +90,7 @@ namespace InvoiceApp.Migrations
                     b.Property<decimal>("TotalAmount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("Id");
+                    b.HasKey("InvoiceId");
 
                     b.HasIndex("SiteId");
 
@@ -162,13 +164,11 @@ namespace InvoiceApp.Migrations
 
             modelBuilder.Entity("InvoiceApp.Models.Invoice", b =>
                 {
-                    b.HasOne("InvoiceApp.Models.Site", "Site")
+                    b.HasOne("InvoiceApp.Models.Site", null)
                         .WithMany("Invoices")
                         .HasForeignKey("SiteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Site");
                 });
 
             modelBuilder.Entity("InvoiceApp.Models.UserSite", b =>
