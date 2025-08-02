@@ -27,7 +27,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReact", policy =>
     {
-        policy.WithOrigins("http://localhost:3000", "http://localhost:8000", "http://localhost:8080")
+        policy.AllowAnyOrigin()
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -52,9 +52,8 @@ app.UseCors("AllowReact");
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
-
 app.UseDefaultFiles(); // Looks for index.html
 app.UseStaticFiles();  // Serve static content
+app.MapControllers();
 app.MapFallbackToFile("index.html");
 app.Run();
