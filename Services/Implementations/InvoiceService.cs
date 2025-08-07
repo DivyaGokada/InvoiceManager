@@ -39,6 +39,7 @@ namespace InvoiceApp.Services.Implementations
                     DirectDebit = i.DirectDebit,
                     Preview = i.Preview,
                     SiteId = i.SiteId,
+                    PdfUrl = i.PdfUrl
                 }).ToListAsync();
         }
         public async Task<(bool isSuccess, object result)> CreateAsync(InvoiceDto dto)

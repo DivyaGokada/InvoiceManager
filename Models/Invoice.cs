@@ -20,5 +20,6 @@
         public bool Preview { get; set; }
         public string? DirectDebit { get; set; } = "";
         public int SiteId { get; set; }
+        public string? PdfUrl { get; set; }
     }
 }

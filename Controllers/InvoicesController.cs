@@ -64,5 +64,52 @@ namespace InvoiceApp.Controllers
             var result = await _invoiceService.DeleteAsync(invoiceId);
             return result.isSuccess ? Ok(result.result) : NotFound(new { message = result.result });
         }
+
+
+        [HttpPost("{invoiceId}/upload")]
+        public async Task<IActionResult> UploadInvoicePdf(int invoiceId, IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("File is empty.");
+
+            // Optional: Validate file type
+            var allowedExtensions = new[] { ".pdf" };
+            var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+            if (!allowedExtensions.Contains(extension))
+                return BadRequest("Only PDF files are allowed.");
+
+            // Optional: Check if invoice exists
+            var invoiceExists = await _context.Invoices.AnyAsync(i => i.InvoiceId == invoiceId);
+            if (!invoiceExists)
+                return NotFound(new { message = $"Invoice with ID {invoiceId} not found." });
+
+            // Create filename and path
+            var newFileName = $"invoice_{invoiceId}{extension}";
+            var relativePath = Path.Combine("Uploads", newFileName);
+            var fullPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", relativePath);
+
+            if (System.IO.File.Exists(fullPath))
+            {
+                System.IO.File.Delete(fullPath);
+            }
+
+            Directory.CreateDirectory(Path.GetDirectoryName(fullPath)!);
+            
+            using (var stream = new FileStream(fullPath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            var invoice = await _context.Invoices.FindAsync(invoiceId);
+            if (invoice != null)
+            {
+                invoice.PdfUrl = newFileName;
+                await _context.SaveChangesAsync();
+            }
+
+            return Ok(new { newFileName });
+        }
+
+
     }
 }

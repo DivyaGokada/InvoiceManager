@@ -20,5 +20,6 @@ namespace InvoiceApp.Dtos.Invoice
         public decimal NonGSTAmount { get; set; }
         public string? DirectDebit { get; set; } = "";
         public int SiteId { get; set; }
+        public string? PdfUrl { get; set; }
     }
 }
