@@ -42,7 +42,7 @@ namespace InvoiceApp.Services.Implementations
                     DirectDebit = i.DirectDebit,
                     Preview = i.Preview,
                     SiteId = i.SiteId,
-                    PdfUrl = i.PdfUrl
+                    InvoiceUrl = i.InvoiceUrl
                 }).OrderByDescending(i => i.DueDate).ToListAsync();
         }
         public async Task<(bool isSuccess, object result)> CreateAsync(InvoiceDto dto)
@@ -129,6 +129,7 @@ namespace InvoiceApp.Services.Implementations
             if (!allowedExtensions.Contains(extension))
                 return (false, "Only PDF files are allowed.");
 
+            // Fetch site name based on invoiceId
             var siteName = await (from i in _context.Invoices
                                 join s in _context.Sites on i.SiteId equals s.Id
                                 where i.InvoiceId == invoiceId
@@ -142,12 +143,19 @@ namespace InvoiceApp.Services.Implementations
             var relativePath = Path.Combine(siteName, newFileName);
             var fullPath = Path.Combine( _invoiceFolder, relativePath);
 
-            if (File.Exists(fullPath))
+            // Ensure directory exists and delete old files if necessary
+            var fileBaseName = Path.GetFileNameWithoutExtension(fullPath);
+            var directory = Path.GetDirectoryName(fullPath);
+            foreach (var ext in allowedExtensions)
             {
-                File.Delete(fullPath);
+                var oldFilePath = Path.Combine(directory!, fileBaseName + ext);
+                if (File.Exists(oldFilePath))
+                {
+                    File.Delete(oldFilePath);
+                }
             }
-
-            Directory.CreateDirectory(Path.GetDirectoryName(fullPath)!);
+            
+            Directory.CreateDirectory(directory!);
 
             using (var stream = new FileStream(fullPath, FileMode.Create))
             {
@@ -157,7 +165,7 @@ namespace InvoiceApp.Services.Implementations
             var invoice = await _context.Invoices.FindAsync(invoiceId);
             if (invoice != null)
             {
-                invoice.PdfUrl = relativePath;
+                invoice.InvoiceUrl = relativePath;
                 await _context.SaveChangesAsync();
             }
 

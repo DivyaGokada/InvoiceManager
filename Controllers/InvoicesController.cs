@@ -35,7 +35,7 @@ namespace InvoiceApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var fields = ModelState.Where(x => x.Value.Errors.Any())
+                var fields = ModelState.Where(x => x.Value != null && x.Value.Errors.Any())
                                        .Select(x => x.Key).ToList();
                 return BadRequest(new { message = "Invalid input", missingFields = fields });
             }
@@ -48,7 +48,7 @@ namespace InvoiceApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var fields = ModelState.Where(x => x.Value.Errors.Any())
+                var fields = ModelState.Where(x => x.Value != null && x.Value.Errors.Any())
                                        .Select(x => x.Key).ToList();
                 return BadRequest(new { message = "Invalid input", errorFields = fields });
             }
