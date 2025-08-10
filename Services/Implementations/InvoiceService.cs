@@ -9,10 +9,13 @@ namespace InvoiceApp.Services.Implementations
     public class InvoiceService : IInvoiceService
     {
         private readonly ApplicationDbContext _context;
+        private readonly string _invoiceFolder;
 
-        public InvoiceService(ApplicationDbContext context)
+        public InvoiceService(ApplicationDbContext context, IConfiguration config)
         {
             _context = context;
+            _invoiceFolder = config["FileUpload:InvoiceFolder"] 
+                     ?? throw new ArgumentNullException("FileUpload:InvoiceFolder config missing");
         }
 
         public async Task<List<InvoiceDto>> GetBySiteIdAsync(int siteId)
@@ -40,7 +43,7 @@ namespace InvoiceApp.Services.Implementations
                     Preview = i.Preview,
                     SiteId = i.SiteId,
                     PdfUrl = i.PdfUrl
-                }).ToListAsync();
+                }).OrderByDescending(i => i.DueDate).ToListAsync();
         }
         public async Task<(bool isSuccess, object result)> CreateAsync(InvoiceDto dto)
         {
@@ -112,6 +115,52 @@ namespace InvoiceApp.Services.Implementations
 
             var updatedList = await GetBySiteIdAsync(siteId);
             return (true, updatedList);
+        }
+
+        public async Task<(bool isSuccess, object result)> UploadFileAsync(IFormFile file, int invoiceId)
+        {
+            if (file == null || file.Length == 0)
+                return (false, "File is empty.");
+
+            // Optional: Validate file type
+            var allowedExtensions = new[] { ".pdf" };
+            var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+            if (!allowedExtensions.Contains(extension))
+                return (false, "Only PDF files are allowed.");
+
+            var siteName = await (from i in _context.Invoices
+                                join s in _context.Sites on i.SiteId equals s.Id
+                                where i.InvoiceId == invoiceId
+                                select s.Location)
+                                .FirstOrDefaultAsync();
+            if (siteName == null) {
+                siteName = "";
+            }
+            // Create filename and path
+            var newFileName = $"invoice_{invoiceId}{extension}";
+            var relativePath = Path.Combine(siteName, newFileName);
+            var fullPath = Path.Combine( _invoiceFolder, relativePath);
+
+            if (File.Exists(fullPath))
+            {
+                File.Delete(fullPath);
+            }
+
+            Directory.CreateDirectory(Path.GetDirectoryName(fullPath)!);
+
+            using (var stream = new FileStream(fullPath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            var invoice = await _context.Invoices.FindAsync(invoiceId);
+            if (invoice != null)
+            {
+                invoice.PdfUrl = relativePath;
+                await _context.SaveChangesAsync();
+            }
+
+            return (true, new { newFileName });
         }
     }
 }

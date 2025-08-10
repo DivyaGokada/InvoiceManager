@@ -9,6 +9,7 @@ namespace InvoiceApp.Services.Interfaces
         Task<(bool isSuccess, object result)> CreateAsync(InvoiceDto invoiceDto);
         Task<(bool isSuccess, object result)> UpdateAsync(int invoiceId, InvoiceDto invoiceDto);
         Task<(bool isSuccess, object result)> DeleteAsync(int invoiceId);
+        Task<(bool isSuccess, object result)> UploadFileAsync(IFormFile file, int invoiceId);
 
     }
 }
