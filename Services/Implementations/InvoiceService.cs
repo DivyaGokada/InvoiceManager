@@ -94,6 +94,7 @@ namespace InvoiceApp.Services.Implementations
             invoice.TotalAmount = dto.TotalAmount;
             invoice.PaymentDate = dto.PaymentDate;
             invoice.PaymentType = dto.PaymentType;
+            invoice.PaymentStatus = dto.PaymentStatus;
             invoice.DirectDebit = dto.DirectDebit;
             invoice.Preview = dto.Preview;
             invoice.SiteId = dto.SiteId;
@@ -123,7 +124,7 @@ namespace InvoiceApp.Services.Implementations
                 return (false, "File is empty.");
 
             // Optional: Validate file type
-            var allowedExtensions = new[] { ".pdf" };
+            var allowedExtensions = new[] { ".pdf" , ".jpeg", ".jpg"};
             var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
             if (!allowedExtensions.Contains(extension))
                 return (false, "Only PDF files are allowed.");
