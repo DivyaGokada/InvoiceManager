@@ -166,6 +166,7 @@ namespace InvoiceApp.Services.Implementations
             if (invoice != null)
             {
                 invoice.InvoiceUrl = relativePath;
+                invoice.Preview = true;
                 await _context.SaveChangesAsync();
             }
 
