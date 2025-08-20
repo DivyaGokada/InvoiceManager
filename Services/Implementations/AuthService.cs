@@ -24,7 +24,7 @@ namespace InvoiceApp.Services.Implementations
             if (user == null || !string.Equals(user.Password, password, StringComparison.Ordinal))
                 throw new UnauthorizedAccessException("Invalid username or password");
 
-            var userStores = await _context.UserSites
+            var userSites = await _context.UserSites
                 .Where(us => us.UserId == user.Id)
                 .Join(
                     _context.Sites,
@@ -40,7 +40,7 @@ namespace InvoiceApp.Services.Implementations
                 )
                 .ToListAsync();
 
-            return userStores;
+            return userSites;
         }
     }
 }

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InvoiceApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250727091630_InitialCreate")]
+    [Migration("20250820094029_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -34,24 +34,21 @@ namespace InvoiceApp.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InvoiceId"));
 
                     b.Property<string>("AccountHead")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
 
                     b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DirectDebit")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("DueDate")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<decimal>("GST")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
 
                     b.Property<DateTimeOffset>("InvoiceDate")
                         .HasColumnType("datetimeoffset");
@@ -64,8 +61,12 @@ namespace InvoiceApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("InvoiceUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("NonGSTAmount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
 
                     b.Property<DateTimeOffset?>("PaymentDate")
                         .HasColumnType("datetimeoffset");
@@ -88,7 +89,8 @@ namespace InvoiceApp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TotalAmount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
 
                     b.HasKey("InvoiceId");
 
