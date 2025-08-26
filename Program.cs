@@ -14,6 +14,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Add services to the container
 builder.Services.AddScoped<IInvoiceService, InvoiceService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ISupplierService, SupplierService>();
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {

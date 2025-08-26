@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace InvoiceApp.Dtos.Invoice
+namespace InvoiceApp.DTOs
 {
     public class InvoiceDto
     {

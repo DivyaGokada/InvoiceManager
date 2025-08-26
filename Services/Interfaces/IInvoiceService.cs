@@ -1,4 +1,4 @@
-using InvoiceApp.Dtos.Invoice;
+using InvoiceApp.DTOs;
 using InvoiceApp.Models;
 
 namespace InvoiceApp.Services.Interfaces

@@ -1,6 +1,6 @@
 using AutoMapper;
 using InvoiceApp.Data;
-using InvoiceApp.Dtos.Invoice;
+using InvoiceApp.DTOs;
 using InvoiceApp.Models;
 using InvoiceApp.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -87,9 +87,12 @@ namespace InvoiceApp.Services.Implementations
                     (us, s) => s.Location
                 )
                 .FirstOrDefaultAsync();
-            if (siteName == null) {
+                
+            if (siteName == null)
+            {
                 siteName = "";
             }
+
             // Create filename and path
             var newFileName = $"invoice_{invoiceId}{extension}";
             var relativePath = Path.Combine(siteName, newFileName);

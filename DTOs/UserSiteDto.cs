@@ -1,4 +1,4 @@
-namespace InvoiceApp.Dtos.UserSite
+namespace InvoiceApp.DTOs
 {
     public class UserSiteDto
     {

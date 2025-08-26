@@ -2,7 +2,7 @@
 using InvoiceApp.Data;
 using Microsoft.EntityFrameworkCore;
 using InvoiceApp.Services.Interfaces;
-using InvoiceApp.Dtos.Invoice;
+using InvoiceApp.DTOs;
 
 namespace InvoiceApp.Controllers
 {
@@ -43,6 +43,7 @@ namespace InvoiceApp.Controllers
             var result = await _invoiceService.CreateAsync(dto);
             return result.isSuccess ? Ok(result.result) : BadRequest(result.result);
         }
+        
         [HttpPut("{invoiceId}")]
         public async Task<IActionResult> Update(int invoiceId, [FromBody] InvoiceDto dto)
         {
@@ -68,10 +69,6 @@ namespace InvoiceApp.Controllers
         [HttpPost("{invoiceId}/upload")]
         public async Task<IActionResult> UploadInvoicePdf(int invoiceId, IFormFile file)
         {
-            // Optional: Check if invoice exists
-            // var invoiceExists = await _context.Invoices.AnyAsync(i => i.InvoiceId == invoiceId);
-            // if (!invoiceExists)
-            //     return NotFound(new { message = $"Invoice with ID {invoiceId} not found." });
             var result = await _invoiceService.UploadFileAsync(file, invoiceId);
             return result.isSuccess ? Ok(result.result) : BadRequest(new { message = result.result });
         }

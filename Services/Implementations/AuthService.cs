@@ -1,5 +1,5 @@
 using InvoiceApp.Data;
-using InvoiceApp.Dtos.UserSite;
+using InvoiceApp.DTOs;
 using InvoiceApp.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 

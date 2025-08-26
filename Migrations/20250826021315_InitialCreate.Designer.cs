@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InvoiceApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250820094029_InitialCreate")]
+    [Migration("20250826021315_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -94,8 +94,6 @@ namespace InvoiceApp.Migrations
 
                     b.HasKey("InvoiceId");
 
-                    b.HasIndex("SiteId");
-
                     b.ToTable("Invoices");
                 });
 
@@ -114,6 +112,26 @@ namespace InvoiceApp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Sites");
+                });
+
+            modelBuilder.Entity("InvoiceApp.Models.Supplier", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SiteId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Suppliers");
                 });
 
             modelBuilder.Entity("InvoiceApp.Models.User", b =>
@@ -164,15 +182,6 @@ namespace InvoiceApp.Migrations
                     b.ToTable("UserSites");
                 });
 
-            modelBuilder.Entity("InvoiceApp.Models.Invoice", b =>
-                {
-                    b.HasOne("InvoiceApp.Models.Site", null)
-                        .WithMany("Invoices")
-                        .HasForeignKey("SiteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("InvoiceApp.Models.UserSite", b =>
                 {
                     b.HasOne("InvoiceApp.Models.Site", "Site")
@@ -194,8 +203,6 @@ namespace InvoiceApp.Migrations
 
             modelBuilder.Entity("InvoiceApp.Models.Site", b =>
                 {
-                    b.Navigation("Invoices");
-
                     b.Navigation("UserSites");
                 });
 

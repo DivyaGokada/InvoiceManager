@@ -1,5 +1,5 @@
 using AutoMapper;
-using InvoiceApp.Dtos.Invoice;
+using InvoiceApp.DTOs;
 using InvoiceApp.Models;
 
 namespace InvoiceApp.Profiles
@@ -9,6 +9,7 @@ namespace InvoiceApp.Profiles
         public MappingProfile()
         {
             CreateMap<Invoice, InvoiceDto>().ReverseMap();
+            CreateMap<Supplier, SupplierDto>().ReverseMap();
         }
     }
 }

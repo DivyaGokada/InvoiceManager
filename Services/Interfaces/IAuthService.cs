@@ -1,4 +1,4 @@
-﻿using InvoiceApp.Dtos.UserSite;
+﻿using InvoiceApp.DTOs;
 
 namespace InvoiceApp.Services.Interfaces
 {

@@ -1,4 +1,4 @@
-﻿namespace InvoiceApp.DTOs.Auth
+﻿namespace InvoiceApp.DTOs
 {
     public class LoginRequestDto
     {

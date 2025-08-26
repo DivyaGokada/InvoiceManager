@@ -1,35 +1,33 @@
 using Microsoft.AspNetCore.Mvc;
 using InvoiceApp.Services.Interfaces;
-using InvoiceApp.Dtos.Invoice;
-using InvoiceApp.DTOs.Auth;
+using InvoiceApp.DTOs;
 
-namespace InvoiceApp.Controllers{
-
-[ApiController]
-[Route("api/[controller]")]
-public class AuthController : ControllerBase
+namespace InvoiceApp.Controllers
 {
-    private readonly IAuthService _authService;
 
-    public AuthController(IAuthService authService)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class AuthController : ControllerBase
     {
-        _authService = authService;
-    }
+        private readonly IAuthService _authService;
 
-    [HttpPost("login")]
-    public async Task<ActionResult<List<InvoiceDto>>> Login([FromBody] LoginRequestDto request)
-    {
-        try
+        public AuthController(IAuthService authService)
         {
-            var invoices = await _authService.LoginAsync(request.Username, request.Password);
-            return Ok(invoices);
+            _authService = authService;
         }
-        catch (UnauthorizedAccessException ex)
+
+        [HttpPost("login")]
+        public async Task<ActionResult<List<InvoiceDto>>> Login([FromBody] LoginRequestDto request)
         {
-            return Unauthorized(ex.Message);
+            try
+            {
+                var invoices = await _authService.LoginAsync(request.Username, request.Password);
+                return Ok(invoices);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
         }
     }
-}
-
-
 }

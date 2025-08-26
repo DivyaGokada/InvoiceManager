@@ -11,6 +11,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Site> Sites => Set<Site>();
     public DbSet<UserSite> UserSites => Set<UserSite>();
     public DbSet<Invoice> Invoices => Set<Invoice>();
+    public DbSet<Supplier> Suppliers => Set<Supplier>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
