@@ -30,8 +30,11 @@ namespace InvoiceApp.Services.Implementations
 
         public async Task<(bool isSuccess, object result)> CreateAsync(int siteId, SupplierDto dto)
         {
-            var supplier = _mapper.Map<Supplier>(dto);
-            supplier.SiteId = siteId;
+            var supplier = new Supplier
+            {
+                Name = dto.Name.ToUpper().Trim(),
+                SiteId = siteId
+            };
             _context.Suppliers.Add(supplier);
             await _context.SaveChangesAsync();
 
